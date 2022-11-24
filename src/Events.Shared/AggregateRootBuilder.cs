@@ -9,7 +9,7 @@ namespace CQRS.Events.Shared
 {
     public interface IAggregateRootBuilder<TEntity> where TEntity : class, IAggregateRoot, new()
     {
-        Task ApplyAsync(TEntity entity, IEvent eventRecord);
+        Task ApplyAsync(TEntity? entity, IEvent eventRecord);
     }
 
     public abstract class AggregateRootBuilder<TEntity> : IAggregateRootBuilder<TEntity> where TEntity : class, IAggregateRoot, new()

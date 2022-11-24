@@ -2,5 +2,6 @@
 {
     public interface IEvent
     {
+        Guid AggregateRootId { get; }
     }
 }

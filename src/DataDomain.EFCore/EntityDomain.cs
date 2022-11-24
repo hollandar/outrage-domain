@@ -24,13 +24,12 @@ namespace DataDomain.EFCore
             this.changeBuilder = serviceProvider.GetRequiredService<IAggregateRootBuilder<TEntity>>();
         }
 
-        public override async ValueTask ApplyEventsAsync(Guid aggregateRootId, IEnumerable<IEvent> events)
+        public override async ValueTask ApplyEventsAsync(IEnumerable<IEvent> events)
         {
-            var product = this.entityBuilder.GetQueryable<TEntity>().FirstOrDefault(r => r.Id == aggregateRootId);
-
             foreach (var @event in events)
             {
-                await changeBuilder.ApplyAsync(product, @event);
+                var entity = this.entityBuilder.GetQueryable<TEntity>().FirstOrDefault(r => r.Id == @event.AggregateRootId);
+                await changeBuilder.ApplyAsync(entity, @event);
             }
 
             await this.entityBuilder.SaveChangesAsync();

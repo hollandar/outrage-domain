@@ -19,15 +19,18 @@ namespace ShoppingCart.Data
             this.eventSourcePrefix = serviceProvider.GetService<EventSourcePrefix>();
         }
 
-        public override async ValueTask ApplyAsync(Guid aggregateRootId, IEnumerable<IEvent> events)
+        public override async ValueTask ApplyAsync(IEnumerable<IEvent> events)
         {
-            await ApplyEventsAsync(aggregateRootId, events);
+            await ApplyEventsAsync(events);
 
             if (typeof(TEntity).IsAssignableTo(typeof(IEventSourcing)) && eventStorageService != null)
             {
-                var eventSourcePrefix = this.eventSourcePrefix?.Prefix ?? String.Empty;
-                var aggregateRootIdObject = typeof(TEntity).GetAggregateRootId(aggregateRootId, eventSourcePrefix);
-                await eventStorageService.StoreEventsAsync(aggregateRootIdObject, events);
+                foreach (var @event in events)
+                {
+                    var eventSourcePrefix = this.eventSourcePrefix?.Prefix ?? String.Empty;
+                    var aggregateRootIdObject = typeof(TEntity).GetAggregateRootId(@event.AggregateRootId, eventSourcePrefix);
+                    await eventStorageService.StoreEventsAsync(aggregateRootIdObject, events);
+                }
             }
         }
     }

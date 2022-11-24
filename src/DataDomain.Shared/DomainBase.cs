@@ -15,17 +15,17 @@ namespace DataDomain.Shared
         {
         }
 
-        public virtual ValueTask ApplyAsync(Guid aggregateRootId, params IEvent[] events)
+        public virtual ValueTask ApplyAsync(params IEvent[] events)
         {
-            return ApplyAsync(aggregateRootId, events.AsEnumerable());
+            return ApplyAsync(events.AsEnumerable());
         }
 
-        public virtual async ValueTask ApplyAsync(Guid aggregateRootId, IEnumerable<IEvent> events)
+        public virtual async ValueTask ApplyAsync(IEnumerable<IEvent> events)
         {
-            await ApplyEventsAsync(aggregateRootId, events);
+            await ApplyEventsAsync(events);
         }
 
-        public abstract ValueTask ApplyEventsAsync(Guid aggregateRootId, IEnumerable<IEvent> events);
+        public abstract ValueTask ApplyEventsAsync(IEnumerable<IEvent> events);
         public abstract Task<IEnumerable<TEntity>> ExecuteQueryAsync(IQueryBuilder<TEntity>? queryBuilder = null);
         public abstract Task<IEnumerable<TEntity>> ExecuteQueryAsync(Func<IQueryable<TEntity>, IEnumerable<TEntity>> queryFunction);
 
